@@ -8,3 +8,4 @@ chromedriver.exe
 local_settings.py
 *.pyc
 *.png
+requirements.prod.txt
