@@ -5,3 +5,6 @@ requirements.b4.prod.txt
 commands.txt
 .env
 chromedriver.exe
+local_settings.py
+*.pyc
+*.png

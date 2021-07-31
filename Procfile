@@ -1,1 +1,1 @@
-1 worker: python main.py
+web: gunicorn mysite.wsgi --log-file -
