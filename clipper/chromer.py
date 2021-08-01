@@ -62,7 +62,7 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
             time.sleep(WAIT)
 
             # Calculate new scroll height and compare with last scroll height
-            new_height = browser.execute_script("return document.body.scrollHeight")
+            new_height = browser.execute_script("return document.documentElement.scrollHeight")
             if new_height == last_height:
                 break
             last_height = new_height
