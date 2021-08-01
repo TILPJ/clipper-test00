@@ -10,3 +10,5 @@ local_settings.py
 *.png
 requirements.prod.txt
 main copy.py
+*.ipynb
+start_clipper copy.py

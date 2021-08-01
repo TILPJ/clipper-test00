@@ -9,7 +9,6 @@ https://stackoverflow.com/questions/62165635/how-to-scrape-data-from-flexbox-ele
 """
 from requests.compat import urljoin
 from bs4 import BeautifulSoup
-from selenium import webdriver
 import re
 from clipper.chromer import get_soup_from_page
 # constants

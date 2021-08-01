@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-
+from selenium.webdriver.common.action_chains import ActionChains
 WAIT = 10 # seconds
 
 def max_window(browser):
@@ -47,31 +47,12 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
     chrome_prefs["profile.default_content_settings"] = {"images": 2}
     with webdriver.Chrome(executable_path=str(os.environ.get('CHROMEDRIVER_PATH')), options=options) as browser:
         
-        browser.implicitly_wait(WAIT)
+        browser.implicitly_wait(WAIT)        
         browser.get(url)
-
-        WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, target_xpath)))
-        # def page_has_loaded(self):
-        #     self.log.info("Checking if {} page is loaded.".format(self.browser.current_url))
-        #     page_state = self.browser.execute_script('return document.readyState;')
-        #     return page_state == 'complete'
-
-        # try:
-        #     myElem = WebDriverWait(browser, delay).until(EC.presence_of_element_located((By.ID, 'IdOfMyElement')))
-        #     print("Page is ready!")
-        # except TimeoutException:
-        #     print("Loading took too much time!")
-
-
+        time.sleep(WAIT/2)
+        
         max_window(browser)
-        try:
-            title = browser.find_element_by_xpath('//title')
-            html = title.get_attribute("innerHTML")
-            soup = BeautifulSoup(html, 'lxml')
-        except Exception:
-            soup = BeautifulSoup(html, 'html.parser')
-        print(soup.get_text())
-
+        
         # Get scroll height
         # last_height = browser.execute_script("return document.body.scrollHeight")
        
@@ -102,14 +83,25 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
         # 마우스를 올려놓아야 펼쳐지는 엘리먼트가 있을 경우
         if mouse_xpath:
             try:
+                print("마우스 시작")
                 a = ActionChains(browser)
+                print("a 성공")
                 m= browser.find_element_by_xpath(mouse_xpath)
+                print("엠=",m)
                 a.move_to_element(m).perform()
-            except Exception:
+            except Exception as e:
+                print("마우스 오류=", e)
                 print("~", end="")
                 
         # browser.save_screenshot("courses.png")
+        # dom이 모두 준비됨을 기다란다
+        with open('./clipper/jquery-3.6.0.min.js', errors='ignore') as f:
+            browser.execute_script(f.read())
+        title = browser.execute_script('return $(document).ready(function(){$("title").text()})')
+        print("****", title, "준비됨", "****")
+        
         # 타겟엘리먼트가 있으면 엘리먼트의 innerHTML 정보를 수집한다.
+        
         blank = False
         try:
             element = browser.find_element_by_xpath(target_xpath)            
@@ -128,6 +120,8 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
         else:
             print('Page:Blank')
             soup = None
-            
+
+        if soup:
+            print("soup 추출 성공")  
         # browser 세션을 종료하고 브라우저를 닫는다.    
     return soup
