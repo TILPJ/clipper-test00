@@ -22,8 +22,8 @@ def set_chrome_options():
     chrome_prefs["profile.default_content_settings"] = {"images": 2}
 
 def max_window(browser):
-    total_width = browser.execute_script("return document.body.offsetWidth")
-    total_height = browser.execute_script("return document.body.scrollHeight")
+    total_width = browser.execute_script("return document.documentElement.offsetWidth")
+    total_height = browser.execute_script("return document.documentElement.scrollHeight")
     browser.set_window_size(max(total_width, 1920), total_height)
 
 
@@ -53,10 +53,11 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
 
         # Get scroll height
         # last_height = browser.execute_script("return document.body.scrollHeight")
+        # heroku에서는 위의 라인 대신 다음을 사용하여야 돌아간다.
         last_height = browser.execute_script("return document.documentElement.scrollHeight")
         while True:
             # Scroll down to bottom
-            browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            browser.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
 
             # Wait to load page
             time.sleep(WAIT)

@@ -9,3 +9,4 @@ local_settings.py
 *.pyc
 *.png
 requirements.prod.txt
+main copy.py
