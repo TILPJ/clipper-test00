@@ -2,8 +2,12 @@ import os
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 
-WAIT = 5 # seconds
+WAIT = 10 # seconds
 
 
 def set_chrome_options():
@@ -17,15 +21,16 @@ def set_chrome_options():
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('disable_infobars') # being controlled by automated ... 없애기
-    options.add_argument('--remote-debugging-port=9222')
-    chrome_prefs = {}
-    options.experimental_options["prefs"] = chrome_prefs
-    chrome_prefs["profile.default_content_settings"] = {"images": 2}
+    # options.add_argument('--remote-debugging-port=9222')
+    # chrome_prefs = {}
+    # options.experimental_options["prefs"] = chrome_prefs
+    # chrome_prefs["profile.default_content_settings"] = {"images": 2}
 
 def max_window(browser):
     total_width = browser.execute_script("return document.documentElement.offsetWidth")
     total_height = browser.execute_script("return document.documentElement.scrollHeight")
     browser.set_window_size(max(total_width, 1920), total_height)
+
 
 
 
@@ -48,20 +53,34 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
     # 웹페이지의 모든 DOM들이 들어가도록 soup 인스턴스를 생성한다.
     with webdriver.Chrome(executable_path=str(os.environ.get('CHROMEDRIVER_PATH')), options=set_chrome_options()) as browser:
         
-        browser.implicitly_wait(WAIT)        
+        browser.implicitly_wait(WAIT)
         browser.get(url)
+
+        WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, target_xpath)))
+        # def page_has_loaded(self):
+        #     self.log.info("Checking if {} page is loaded.".format(self.browser.current_url))
+        #     page_state = self.browser.execute_script('return document.readyState;')
+        #     return page_state == 'complete'
+
+        # try:
+        #     myElem = WebDriverWait(browser, delay).until(EC.presence_of_element_located((By.ID, 'IdOfMyElement')))
+        #     print("Page is ready!")
+        # except TimeoutException:
+        #     print("Loading took too much time!")
+
+
         max_window(browser)
 
         # Get scroll height
         # last_height = browser.execute_script("return document.body.scrollHeight")
-        # heroku에서는 위의 라인 대신 다음을 사용하여야 돌아간다.
+       
         last_height = browser.execute_script("return document.documentElement.scrollHeight")
         while True:
             # Scroll down to bottom
             browser.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
 
             # Wait to load page
-            time.sleep(WAIT)
+            time.sleep(WAIT/2)
 
             # Calculate new scroll height and compare with last scroll height
             new_height = browser.execute_script("return document.documentElement.scrollHeight")
