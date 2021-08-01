@@ -9,29 +9,10 @@ from selenium.common.exceptions import TimeoutException
 
 WAIT = 10 # seconds
 
-
-def set_chrome_options():
-    
-    options = webdriver.chrome.options.Options()
-
-    options.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
-
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('disable_infobars') # being controlled by automated ... 없애기
-    # options.add_argument('--remote-debugging-port=9222')
-    # chrome_prefs = {}
-    # options.experimental_options["prefs"] = chrome_prefs
-    # chrome_prefs["profile.default_content_settings"] = {"images": 2}
-
 def max_window(browser):
     total_width = browser.execute_script("return document.documentElement.offsetWidth")
     total_height = browser.execute_script("return document.documentElement.scrollHeight")
     browser.set_window_size(max(total_width, 1920), total_height)
-
-
 
 
 def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath=None):
@@ -51,7 +32,20 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
 
     # 웹드라이버 세션을 실행하는 동안 본격적인 스크래이핑 작업을 위해
     # 웹페이지의 모든 DOM들이 들어가도록 soup 인스턴스를 생성한다.
-    with webdriver.Chrome(executable_path=str(os.environ.get('CHROMEDRIVER_PATH')), options=set_chrome_options()) as browser:
+    options = webdriver.chrome.options.Options()
+
+    options.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
+
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('disable_infobars') # being controlled by automated ... 없애기
+    options.add_argument('--remote-debugging-port=9222')
+    chrome_prefs = {}
+    options.experimental_options["prefs"] = chrome_prefs
+    chrome_prefs["profile.default_content_settings"] = {"images": 2}
+    with webdriver.Chrome(executable_path=str(os.environ.get('CHROMEDRIVER_PATH')), options=options) as browser:
         
         browser.implicitly_wait(WAIT)
         browser.get(url)
