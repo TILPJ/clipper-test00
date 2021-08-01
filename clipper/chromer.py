@@ -87,7 +87,7 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
             except Exception:
                 print("~", end="")
                 
-        browser.save_screenshot("courses.png")
+        # browser.save_screenshot("courses.png")
         # 타겟엘리먼트가 있으면 엘리먼트의 innerHTML 정보를 수집한다.
         blank = False
         try:
