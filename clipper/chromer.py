@@ -15,6 +15,7 @@ def set_chrome_options():
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
+    options.add_argument('disable_infobars') # being controlled by automated ... 없애기
     options.add_argument('--remote-debugging-port=9222')
     chrome_prefs = {}
     options.experimental_options["prefs"] = chrome_prefs
@@ -51,8 +52,8 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
         max_window(browser)
 
         # Get scroll height
-        last_height = browser.execute_script("return document.body.scrollHeight")
-
+        # last_height = browser.execute_script("return document.body.scrollHeight")
+        last_height = browser.execute_script("return document.documentElement.scrollHeight")
         while True:
             # Scroll down to bottom
             browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
