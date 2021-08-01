@@ -70,6 +70,13 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
 
 
         max_window(browser)
+        try:
+            title = browser.find_element_by_xpath('//title')
+            html = title.get_attribute("innerHTML")
+            soup = BeautifulSoup(html, 'lxml')
+        except Exception:
+            soup = BeautifulSoup(html, 'html.parser')
+        print(soup.get_text())
 
         # Get scroll height
         # last_height = browser.execute_script("return document.body.scrollHeight")
