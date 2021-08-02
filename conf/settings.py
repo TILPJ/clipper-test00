@@ -139,12 +139,17 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# newly added for static files
+# location where django collect all static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# location where you will store your static files
+# STATICFILES_DIR = os.path.join(BASE_DIR, 'conf/static')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# newly added for static files
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

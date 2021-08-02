@@ -28,6 +28,12 @@
 - `clipper/jquery-3.6.0.min.js` added for webdriver to act with minimal errors.
 
 
+# In `.env`
+- `SECRET_KEY`
+- `GOOGLE_CHROME_BIN` *오직 값없는 이름만.*
+- `CHROMEDRIVER_PATH`
+- `EMAIL_HOST_USER`
+- `EMAIL_HOST_PASSWORD`
 ---
 # Perfomaces or Results
 - Main command: `python start_clipper.py -n <site_name>`
@@ -35,8 +41,8 @@
 - Average 10-20 seconds for scraping a webpage.
   
 
----
 # References
+---  
 - Xpath cheatsheet : https://devhints.io/xpath#indexing  
 - Django Model URLField : https://docs.djangoproject.com/en/3.2/ref/models/fields/ 
 - Supported Runtimes in Heroku: https://devcenter.heroku.com/articles/python-support#supported-runtimes  
