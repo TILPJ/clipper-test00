@@ -15,8 +15,10 @@
   - chromedriver
   
 ---  
+
+
 # Known Issues(2021-08-01)
-- **MAJOR ISSUE**: "No web processes running" in Heroku
+- MAJOR ISSUE: "No web processes running" in Heroku -> solved!(2021-08-02)
 - A common 4-tier architecture(development, testing, model, production) is ignored. 
 - Alert: `clipper/views.py` can be abused !!!   
   but not activated yet due to the first issue.
