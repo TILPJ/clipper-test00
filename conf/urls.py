@@ -18,5 +18,5 @@ from django.urls import path
 from clipper import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('clipper/', views.nomad),
+    path('clipper/', views.index),
 ]
