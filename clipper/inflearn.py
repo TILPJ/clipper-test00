@@ -126,12 +126,15 @@ def extract_courses(last_page):
         for result in results:
             course = extract_course(result)
             courses_info.append(course)
+        
+        time.sleep(WAIT)
 
     return courses_info
 
 
 def get_courses():
     last_page = get_last_page()
+    print("페이지 수는 총 ", last_page)    
     courses_info = extract_courses(last_page)
 
     return courses_info
