@@ -27,8 +27,11 @@ def extract_section_list(html):
     section_list = []
 
     sections = html.find_all("span", {"class":"ac-accordion__unit-title"})
-    for section in sections:
-        section_list.append(section.string)
+    if sections:
+        for section in sections:
+            section_list.append(section.string)
+    else:
+        print("section_list 가 없음")
 
     return section_list
 
@@ -45,7 +48,9 @@ def extract_chapter_list(link):
     for result in results:
         chapter_name = result.find("span", {"class":"cd-accordion__section-title"})
         if chapter_name:
-            chapter_name = chapter_name.string   
+            chapter_name = chapter_name.string
+        else:
+            print("chapter 이름이 없음")
 
         section_list = extract_section_list(result)
 
@@ -65,29 +70,45 @@ def extract_course(html):
     title이 없는 경우에 => AttributeError: 'NoneType' object has no attribute 'string' 에러가 발생한다
     해당 오류를 방지하기 위해 아래와 같이 if문으로 한번 체크를 해준다
     description, instructor도 동일
-    """
-    title = html.find("div", {"class":"course_title"})
-    if title:
-        title = title.string
+    """    
+    try:
+        title = html.find("div", {"class":"course_title"})
+        if title:
+            title = title.string
+            print(title)
+        else:
+            print("title 이 없음.")
 
-    thumbnail_link = html.find("div", {"class":"card-image"}) # 대표이미지가 video인 경우가 있다
-    if thumbnail_link.find("img"):
-        thumbnail_link = thumbnail_link.find("img")["src"]
-    elif thumbnail_link.find("source"):
-        thumbnail_link = thumbnail_link.find("source")["src"]
+        thumbnail_link = html.find("div", {"class":"card-image"}) # 대표이미지가 video인 경우가 있다
+        if thumbnail_link.find("img"):
+            thumbnail_link = thumbnail_link.find("img")["src"]
+        elif thumbnail_link.find("source"):
+            thumbnail_link = thumbnail_link.find("source")["src"]
+        else:
+            print("thumbnail 이 없음.")
 
-    description = html.find("p", {"class":"course_description"})
-    if description:
-        description = description.string
+        description = html.find("p", {"class":"course_description"})
+        if description:
+            description = description.string
+        else:
+            print("description 이 없음")
 
-    instructor = html.find("div", {"class":"instructor"})
-    if instructor:
-        instructor = instructor.string
+        instructor = html.find("div", {"class":"instructor"})
+        if instructor:
+            instructor = instructor.string
+        else:
+            print("instructor 가 없음")
 
-    course_link = html.find("a", {"class":"course_card_front"})["href"]
-    course_link = urljoin(BASE_URL, course_link)
-
-    chapter_list = extract_chapter_list(course_link)
+        course_link = html.find("a", {"class":"course_card_front"})["href"]
+        course_link = urljoin(BASE_URL, course_link)
+        
+        if course_link:
+            chapter_list = extract_chapter_list(course_link)
+        else:
+            print("course_link 가 없음")
+    except Exception as e:
+        print("에러: ", e)
+        
 
     return {
         "title" : title,
@@ -127,14 +148,12 @@ def extract_courses(last_page):
             course = extract_course(result)
             courses_info.append(course)
         
-        time.sleep(WAIT)
-
     return courses_info
 
 
 def get_courses():
     last_page = get_last_page()
     print("페이지 수는 총 ", last_page)    
-    courses_info = extract_courses(last_page)
+    courses_info = extract_courses(last_page=5)
 
     return courses_info

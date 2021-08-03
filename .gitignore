@@ -2,7 +2,7 @@ __pycache__/
 .vscode
 db.sqlite*
 requirements.prod.txt
-commands.txt
+instruction.txt
 .env
 chromedriver.exe
 local_settings.py
@@ -14,3 +14,5 @@ main copy.py
 start_clipper_local.py
 *.log
 *.pot
+.ipynb_checkpoints
+requirements.dev.txt

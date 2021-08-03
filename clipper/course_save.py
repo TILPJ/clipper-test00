@@ -3,12 +3,21 @@ from clipper.models import Site, Course, Chapter, Section
 # 섹션 정보 저장
 def section_info_save(chapter, section_list):
 
-    for section in section_list:
+    if section_list:
+        for section in section_list:
+            data = Section(id=None,
+                           name=section[:500],
+                           chapter=chapter
+                        )
+    
+    # 섹션이 없는 경우 chapter이름으로 대체한다.
+    else:
         data = Section(id=None,
-                       name=section[:500],
+                       name=chapter.name,
                        chapter=chapter
                     )
-        data.save()
+    data.save()
+    
 
 
 # 챕터 정보 저장
@@ -21,7 +30,12 @@ def chapter_info_save(course, chapter_list):
                     )
         data.save()
         
-        section_list = chapter["section_list"]
+        # section이 없는 경우도 고려함.
+        if chapter["section_list"]:
+            section_list = chapter["section_list"]
+        else:
+            section_list = []
+            
         section_info_save(data, section_list)
 
 

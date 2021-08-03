@@ -51,3 +51,4 @@
 - Heroku chromedriver buildpacks: https://github.com/heroku/heroku-buildpack-chromedriver
 - How to deploy python selenium apps in Heroku: https://romik-kelesh.medium.com/how-to-deploy-a-python-web-scraper-with-selenium-on-heroku-1459cb3ac76c
 - Deploying Django App on Heroku with Postgres: https://medium.com/@hdsingh13/deploying-django-app-on-heroku-with-postgres-as-backend-b2f3194e8a43
+- djago tutorial: https://developer.mozilla.org/ko/docs/Learn/Server-side/Django/Deployment
