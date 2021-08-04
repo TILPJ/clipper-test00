@@ -18,4 +18,4 @@
         
 5. 필요한 기능:
     - saving interval / pause / resume
-    - 
+    - 덮어쓰기 여부?

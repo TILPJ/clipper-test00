@@ -5,10 +5,15 @@ def section_info_save(chapter, section_list):
 
     if section_list:
         for section in section_list:
-            data = Section(id=None,
-                           name=section[:500],
-                           chapter=chapter
-                        )
+            if section:
+                data = Section(id=None,
+                            name=section[:500],
+                            chapter=chapter
+                            )
+            else:
+                data = Section(id=None,
+                            name=".",
+                            chapter=chapter)
             data.save()
     # 섹션이 없는 경우 chapter이름으로 대체한다.
     else:
@@ -23,11 +28,17 @@ def section_info_save(chapter, section_list):
 # 챕터 정보 저장
 def chapter_info_save(course, chapter_list):
     
-    for chapter in chapter_list:        
-        data = Chapter(id=None,
-                       name=chapter["chapter"][:500],
-                       course=course
-                    )
+    for chapter in chapter_list:
+        if chapter:        
+            data = Chapter(id=None,
+                        name=chapter["chapter"][:500],
+                        course=course
+                        )
+        else:
+            data = Chapter(id=None,
+                        name=".",
+                        course=course
+                        )
         data.save()
         
         # section이 없는 경우도 고려함.
@@ -48,7 +59,13 @@ def course_info_save(courses, site_):
         # 저장되지 않았다면 get함수는 오류를 발생시키므로 (filter는 empty query)
         # 오류를 캐취하면 DB에 저장하도록 한다.
         try:
-            crs = Course.objects.get(course_link=course["course_link"])
+            data = Course.objects.get(course_link=course["course_link"])
+
+            data.title = course["title"][:500]
+            data.thumbnail_link = course["thumbnail_link"]
+            data.description = course["description"]
+            data.instructor = course["instructor"][:300]
+            data.site = site_
         except Exception:
             data = Course(id=None,
                           title=course["title"][:500], 
@@ -58,10 +75,12 @@ def course_info_save(courses, site_):
                           course_link=course["course_link"], 
                           site=site_
                         )
+        finally:    
             data.save()
         
             chapter_list = course["chapter_list"]
             chapter_info_save(data, chapter_list)
+            print(data.title, "저장됨")
 
     
 # inflean.py 파일에서 스크랩하여 저장한 리스트를 받아서 데이터베이스에 저장

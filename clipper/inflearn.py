@@ -2,7 +2,6 @@ import requests
 from requests.compat import urljoin 
 from bs4 import BeautifulSoup
 import time
-from clipper.course_save import save
 
 BASE_URL = "https://www.inflearn.com"
 WAIT = 10 # seconds
@@ -125,12 +124,12 @@ def extract_course(html):
 # 1페이지 url = https://www.inflearn.com/courses/it-programming?page=1
 # 2페이지 url = https://www.inflearn.com/courses/it-programming?page=2
 # ... 
-def extract_courses(last_page):
+def extract_courses(last_page, start_page=1):
 
     courses_info = []
 
     # for page in range(1, last_page+1):
-    for page in range(1, last_page+1): 
+    for page in range(start_page, last_page+1): 
         
         print(f"=====Scrapping page {page}=====")
         response = requests.get(urljoin(URL, f"?order=seq&page={page}")) # "?page={page}"))
@@ -155,17 +154,8 @@ def extract_courses(last_page):
 def get_courses():
     last_page = get_last_page()
     print("페이지 수는 총 ", last_page)    
-    courses_info = extract_courses(last_page)
+    courses_info = extract_courses(last_page, start_page=1)
 
     return courses_info
 
 
-def save(courses, site_name):
-
-    try:
-        site = Site.objects.get(name__contains=site_name)
-    except Exception:
-        site = Site(name=site_name)
-        site.save()
-
-    course_info_save(courses, site)
