@@ -2,11 +2,12 @@ import requests
 from requests.compat import urljoin 
 from bs4 import BeautifulSoup
 import time
+from clipper.course_save import save
 
 BASE_URL = "https://www.inflearn.com"
 WAIT = 10 # seconds
-# 인프런 > 강의 > 개발/프로그래밍
-CATEGORY_URL = "/courses/it-programming"
+# 인프런 > 강의 
+CATEGORY_URL = "/courses" # > 개발/프로그래밍  /it-programming"
 
 URL = urljoin(BASE_URL, CATEGORY_URL)
 
@@ -132,7 +133,7 @@ def extract_courses(last_page):
     for page in range(1, last_page+1): 
         
         print(f"=====Scrapping page {page}=====")
-        response = requests.get(urljoin(URL, f"?page={page}"))
+        response = requests.get(urljoin(URL, f"?order=seq&page={page}")) # "?page={page}"))
         time.sleep(WAIT)
         
         # 가급적 속도가 빠른 lxml 파서를 이용한다. 
@@ -154,6 +155,17 @@ def extract_courses(last_page):
 def get_courses():
     last_page = get_last_page()
     print("페이지 수는 총 ", last_page)    
-    courses_info = extract_courses(last_page=5)
+    courses_info = extract_courses(last_page)
 
     return courses_info
+
+
+def save(courses, site_name):
+
+    try:
+        site = Site.objects.get(name__contains=site_name)
+    except Exception:
+        site = Site(name=site_name)
+        site.save()
+
+    course_info_save(courses, site)

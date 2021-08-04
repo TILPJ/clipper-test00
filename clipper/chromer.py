@@ -1,3 +1,10 @@
+"""
+chromedriver를 가동시켜 웹페이지를 크롤링하면서
+목표가 되는 엘리먼트를 soup 객체로 추출하는 
+메서드를 담고 있는 모듈이다.
+
+"""
+
 import os
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -30,21 +37,24 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
 
     """
 
-    # 웹드라이버 세션을 실행하는 동안 본격적인 스크래이핑 작업을 위해
-    # 웹페이지의 모든 DOM들이 들어가도록 soup 인스턴스를 생성한다.
+    # heroku 에 배포하기 위해 필요한 옵션들
     options = webdriver.chrome.options.Options()
-
     options.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
-
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    
+    # 이하의 옵션은 부가적인 옵선이다.
     options.add_argument('disable_infobars') # being controlled by automated ... 없애기
     options.add_argument('--remote-debugging-port=9222')
     chrome_prefs = {}
     options.experimental_options["prefs"] = chrome_prefs
     chrome_prefs["profile.default_content_settings"] = {"images": 2}
+    
+    
+    # 웹드라이버 세션을 실행하는 동안 본격적인 스크래이핑 작업을 위해
+    # 웹페이지의 모든 DOM들이 들어가도록 soup 인스턴스를 생성한다.
     with webdriver.Chrome(executable_path=str(os.environ.get('CHROMEDRIVER_PATH')), options=options) as browser:
         
         browser.implicitly_wait(WAIT)        
@@ -54,8 +64,7 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
         max_window(browser)
         
         # Get scroll height
-        # last_height = browser.execute_script("return document.body.scrollHeight")
-       
+        # last_height = browser.execute_script("return document.body.scrollHeight")       
         last_height = browser.execute_script("return document.documentElement.scrollHeight")
         while True:
             # Scroll down to bottom
@@ -95,9 +104,9 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
                 
         # browser.save_screenshot("courses.png")
         # dom이 모두 준비됨을 기다란다
-        with open('./clipper/jquery-3.6.0.min.js', errors='ignore') as f:
-            browser.execute_script(f.read())
-        title = browser.execute_script('return $(document).ready(function(){$("title").text()})')
+        # with open('./clipper/jquery-3.6.0.min.js', errors='ignore') as f:
+        #     browser.execute_script(f.read())
+        # title = browser.execute_script('return $(document).ready(function(){console.log("로딩완료");})')
         print("****", title, "준비됨", "****")
         
         # 타겟엘리먼트가 있으면 엘리먼트의 innerHTML 정보를 수집한다.
