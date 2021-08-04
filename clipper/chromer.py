@@ -102,17 +102,13 @@ def get_soup_from_page(url, target_xpath='/html', button_xpath=None, mouse_xpath
                 print("마우스 오류=", e)
                 print("~", end="")
                 
-        # browser.save_screenshot("courses.png")
-        # dom이 모두 준비됨을 기다란다
-        # with open('./clipper/jquery-3.6.0.min.js', errors='ignore') as f:
-        #     browser.execute_script(f.read())
-        # title = browser.execute_script('return $(document).ready(function(){console.log("로딩완료");})')
-        print("****", title, "준비됨", "****")
-        
+                
         # 타겟엘리먼트가 있으면 엘리먼트의 innerHTML 정보를 수집한다.
-        
         blank = False
         try:
+            element = WebDriverWait(browser, WAIT).until(
+                        EC.presence_of_element_located((By.XPATH, target_xpath))
+                        )
             element = browser.find_element_by_xpath(target_xpath)            
         except Exception:
             blank = True
