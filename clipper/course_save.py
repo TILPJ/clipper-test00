@@ -10,7 +10,6 @@ def section_info_save(chapter, section_list):
                            chapter=chapter
                         )
             data.save()
-            print(data.name)
     # 섹션이 없는 경우 chapter이름으로 대체한다.
     else:
         data = Section(id=None,
